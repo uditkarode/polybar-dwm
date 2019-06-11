@@ -73,9 +73,11 @@ add_library(poly STATIC ${files})
 target_include_directories(poly PUBLIC ${dirs})
 target_link_libraries(poly ${libs} Threads::Threads)
 target_compile_options(poly PUBLIC $<$<CXX_COMPILER_ID:GNU>:$<$<CONFIG:MinSizeRel>:-flto>>)
+set_target_properties(poly PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/libs)
 
 add_executable(polybar main.cpp)
 target_link_libraries(polybar poly)
+set_target_properties(poly PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 install(TARGETS polybar
   DESTINATION ${CMAKE_INSTALL_BINDIR}
