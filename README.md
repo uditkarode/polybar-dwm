@@ -215,6 +215,11 @@ label-empty-background = ${colors.primary}
 label-empty-padding = 2
 ```
 
+You can also take a look at my
+[personal](https://github.com/mihirlad55/dotfiles/blob/arch-dwm/.config/polybar/config#L99)
+bar configuration which is more representative of the screenshot above.
+
+
 ## License
 Polybar is licensed under the MIT license. [See LICENSE for more
 information](https://github.com/polybar/polybar/blob/master/LICENSE).
