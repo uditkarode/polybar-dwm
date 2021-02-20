@@ -117,46 +117,53 @@ set_build_opts() {
     [[ "${p^^}" != "Y" ]] && USE_GCC="OFF" || USE_GCC="ON"
   fi
 
-  if [[ -z "$ENABLE_DWM" ]]; then
-    read -r -p "$(msg "Include support for \"internal/dwm\" (requires dwm) -------------- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_DWM="OFF" || ENABLE_DWM="ON"
-  fi
+  #if [[ -z "$ENABLE_DWM" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/dwm\" (requires dwm) -------------- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_DWM="OFF" || ENABLE_DWM="ON"
+  #fi
+  ENABLE_DWM="ON"
 
-  if [[ -z "$ENABLE_ALSA" ]]; then
-    read -r -p "$(msg "Include support for \"internal/alsa\" (requires alsalib) --------- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_ALSA="OFF" || ENABLE_ALSA="ON"
-  fi
+  #if [[ -z "$ENABLE_ALSA" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/alsa\" (requires alsalib) --------- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_ALSA="OFF" || ENABLE_ALSA="ON"
+  #fi
+  ENABLE_ALSA="OFF"
 
-  if [[ -z "$ENABLE_PULSEAUDIO" ]]; then
-    read -r -p "$(msg "Include support for \"internal/pulseaudio\" (requires libpulse) -- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_PULSEAUDIO="OFF" || ENABLE_PULSEAUDIO="ON"
-  fi
+  #if [[ -z "$ENABLE_PULSEAUDIO" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/pulseaudio\" (requires libpulse) -- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_PULSEAUDIO="OFF" || ENABLE_PULSEAUDIO="ON"
+  #fi
+  ENABLE_PULSEAUDIO="ON"
 
-  if [[ -z "$ENABLE_NETWORK" ]]; then
-    read -r -p "$(msg "Include support for \"internal/network\" (requires libnl/libiw) -- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_NETWORK="OFF" || ENABLE_NETWORK="ON"
-  fi
+  #if [[ -z "$ENABLE_NETWORK" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/network\" (requires libnl/libiw) -- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_NETWORK="OFF" || ENABLE_NETWORK="ON"
+  #fi
+  ENABLE_NETWORK="ON"
 
-  if [[ -z "$ENABLE_MPD" ]]; then
-    read -r -p "$(msg "Include support for \"internal/mpd\" (requires libmpdclient) ----- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_MPD="OFF" || ENABLE_MPD="ON"
-  fi
+  #if [[ -z "$ENABLE_MPD" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/mpd\" (requires libmpdclient) ----- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_MPD="OFF" || ENABLE_MPD="ON"
+  #fi
+  ENABLE_MPD="ON"
 
-  if [[ -z "$ENABLE_CURL" ]]; then
-    read -r -p "$(msg "Include support for \"internal/github\" (requires libcurl) ------- [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_CURL="OFF" || ENABLE_CURL="ON"
-  fi
+  #if [[ -z "$ENABLE_CURL" ]]; then
+  #  read -r -p "$(msg "Include support for \"internal/github\" (requires libcurl) ------- [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_CURL="OFF" || ENABLE_CURL="ON"
+  #fi
+  ENABLE_CURL="OFF"
 
-  if [[ -z "$ENABLE_IPC_MSG" ]]; then
-    read -r -p "$(msg "Build \"polybar-msg\" used to send ipc messages ------------------ [y/N]: ")" -n 1 p && echo
-    [[ "${p^^}" != "Y" ]] && ENABLE_IPC_MSG="OFF" || ENABLE_IPC_MSG="ON"
-  fi
+  #if [[ -z "$ENABLE_IPC_MSG" ]]; then
+  #  read -r -p "$(msg "Build \"polybar-msg\" used to send ipc messages ------------------ [y/N]: ")" -n 1 p && echo
+  #  [[ "${p^^}" != "Y" ]] && ENABLE_IPC_MSG="OFF" || ENABLE_IPC_MSG="ON"
+  #fi
+  ENABLE_IPC_MSG="ON"
   
-  if [[ -z "$JOB_COUNT" ]]; then
-	read -r -p "$(msg "Parallelize the build using make -j$(nproc) --------------------------- [y/N]: ")" -n 1 p && echo
-	[[ "${p^^}" != "Y" ]] && JOB_COUNT=1 || JOB_COUNT=$(nproc)
-  fi
-
+  #if [[ -z "$JOB_COUNT" ]]; then
+	# read -r -p "$(msg "Parallelize the build using make -j$(nproc) --------------------------- [y/N]: ")" -n 1 p && echo
+	# [[ "${p^^}" != "Y" ]] && JOB_COUNT=1 || JOB_COUNT=$(nproc)
+  #fi
+  JOB_COUNT="$(nproc --all)"
 
   CXX="c++"
 
@@ -174,11 +181,6 @@ set_build_opts() {
 }
 
 main() {
-  [[ -d ./.git ]] && {
-    msg "Fetching submodules"
-    git submodule update --init --recursive || msg_err "Failed to clone submodules"
-  }
-
   [[ -d ./build ]] && {
     if [[ "$REMOVE_BUILD_DIR" == ON ]]; then
       msg "Removing existing build dir (-f)"
@@ -196,14 +198,14 @@ main() {
   msg "Executing cmake command"
   cmake                                       \
     -DCMAKE_CXX_COMPILER="${CXX}"             \
-    -DENABLE_ALSA:BOOL="${ENABLE_ALSA}"       \
-    -DENABLE_PULSEAUDIO:BOOL="${ENABLE_PULSEAUDIO}"\
+    -DENABLE_ALSA:BOOL="OFF"       \
+    -DENABLE_PULSEAUDIO:BOOL="ON" \
     -DENABLE_I3:BOOL="OFF"           \
-    -DENABLE_DWM:BOOL="${ENABLE_DWM}"         \
-    -DENABLE_MPD:BOOL="${ENABLE_MPD}"         \
-    -DENABLE_NETWORK:BOOL="${ENABLE_NETWORK}" \
-    -DENABLE_CURL:BOOL="${ENABLE_CURL}"       \
-    -DBUILD_IPC_MSG:BOOL="${ENABLE_IPC_MSG}"   \
+    -DENABLE_DWM:BOOL="ON"         \
+    -DENABLE_MPD:BOOL="OFF"         \
+    -DENABLE_NETWORK:BOOL="ON" \
+    -DENABLE_CURL:BOOL="OFF"       \
+    -DBUILD_IPC_MSG:BOOL="ON"   \
     .. || msg_err "Failed to generate build... read output to get a hint of what went wrong"
 
   msg "Building project"
