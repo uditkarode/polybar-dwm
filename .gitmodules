@@ -1,4 +1,0 @@
-[submodule "lib/xpp"]
-	path = lib/xpp
-	url = https://github.com/polybar/xpp
-	branch = master
