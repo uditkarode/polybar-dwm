@@ -73,12 +73,10 @@ install() {
     [[ -z "$INSTALL_CONF" ]] && INSTALL_CONF="OFF"
   fi
 
-  #if [[ -z "$INSTALL" ]]; then
-    #read -r -p "$(msg "Execute 'sudo make install'? [Y/n] ")" -n 1 p && echo
-    #[[ "${p^^}" != "N" ]] && INSTALL="ON" || INSTALL="OFF"
-  #fi
-  echo "You must now run 'sudo make install' if you wish to install polybar to system!"
-  INSTALL="OFF"
+  if [[ -z "$INSTALL" ]]; then
+    read -r -p "$(msg "Execute 'sudo make install'? [Y/n] ")" -n 1 p && echo
+    [[ "${p^^}" != "N" ]] && INSTALL="ON" || INSTALL="OFF"
+  fi
 
   #if [[ -z "$INSTALL_CONF" ]]; then
     #read -r -p "$(msg "Install example configuration? [y/N]: ")" -n 1 p && echo
