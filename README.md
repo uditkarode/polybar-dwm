@@ -193,7 +193,7 @@ label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.primary}
 label-focused-padding = 2
 
-; unfocused = Unselected tag on unselected monitor
+; unfocused = Selected tag on unselected monitor
 label-unfocused = %name%
 label-unfocused-padding = 2
 
